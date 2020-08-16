@@ -3,8 +3,11 @@
 
 name: Java CI with Gradle
 
+on: [push]
+
 jobs:
   build:
+    
 
     runs-on: ubuntu-latest
 
