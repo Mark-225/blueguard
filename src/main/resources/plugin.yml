@@ -4,4 +4,4 @@ description: Displays Worldguard regions on Bluemap
 author: Mark_225
 main: de.mark225.blueguard.Blueguard
 depend: [BlueMap, WorldGuard]
-api-version: 1.16
+api-version: 1.13
