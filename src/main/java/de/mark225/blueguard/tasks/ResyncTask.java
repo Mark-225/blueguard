@@ -54,6 +54,6 @@ public class ResyncTask extends BukkitRunnable {
                     }
                 }
             }
-        }.runTaskLater(Blueguard.instance, snapshots.size());
+        }.runTaskLater(Blueguard.instance, worlds.size());
     }
 }
