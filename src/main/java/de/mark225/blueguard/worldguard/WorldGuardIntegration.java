@@ -43,9 +43,9 @@ public class WorldGuardIntegration {
         try {
             StateFlag renderFlag = new StateFlag("render-on-bluemap", true);
             IntegerFlag heightFlag = new IntegerFlag("bluemap-render-height");
-            StringFlag colorFlag = new StringFlag("bluemap-color", "0087ffff");
-            StringFlag outlineFlag = new StringFlag("bluemap-color-outline", "0060ff");
-            StringFlag displayFlag = new StringFlag("bluemap-display", "");
+            StringFlag colorFlag = new StringFlag("bluemap-color", Integer.toHexString(BlueGuardConfig.defaultColor().getRGB()));
+            StringFlag outlineFlag = new StringFlag("bluemap-color-outline", Integer.toHexString(BlueGuardConfig.defaultBorderColor().getRGB()).substring(2));
+            StringFlag displayFlag = new StringFlag("bluemap-display");
             flags.registerAll(Arrays.asList(new Flag[]{renderFlag, heightFlag, colorFlag, outlineFlag, displayFlag}));
             RENDER_FLAG = renderFlag;
             HEIGHT_FLAG = heightFlag;

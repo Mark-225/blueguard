@@ -19,6 +19,7 @@ public class Blueguard extends JavaPlugin {
 
     @Override
     public void onLoad(){
+        setupConfig();
         worldguard = new WorldGuardIntegration();
         wgInit = worldguard.init();
     }
@@ -26,7 +27,6 @@ public class Blueguard extends JavaPlugin {
     @Override
     public void onEnable(){
         instance = this;
-        setupConfig();
         BlueMapAPI.registerListener(bluemap = new BlueMapIntegration());
         if(wgInit){
             resyncTask = new ResyncTask();
