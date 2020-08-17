@@ -33,10 +33,13 @@ public class WorldGuardIntegration {
     public static StringFlag OUTLINE_FLAG;
     public static StringFlag DISPLAY_FLAG;
 
-    private static Pattern hexPatternRGBA = Pattern.compile("[0-9a-f]{8}");
-    private static Pattern hexPatternRGB = Pattern.compile("[0-9a-f]{6}");
+    private static final Pattern hexPatternRGBA = Pattern.compile("[0-9a-f]{8}");
+    private static final Pattern hexPatternRGB = Pattern.compile("[0-9a-f]{6}");
 
-
+    /**
+     * Initializes the Worldguard integration and registers the custom flags. Can only be called once during {@link org.bukkit.plugin.java.JavaPlugin#onLoad()}
+     * @return true if the registration of custom flags was successful
+     */
     public boolean init(){
         //register custom flags
         FlagRegistry flags = WorldGuard.getInstance().getFlagRegistry();
@@ -59,15 +62,25 @@ public class WorldGuardIntegration {
         return false;
     }
 
+    /**
+     * Iterates through all Worldguard regions of a given world, filters out regions that can't be rendered or
+     * are configured to not be rendered on Bluemap and returns them as seperate {@link RegionSnapshot} objects.
+     * @param worldUUID
+     * @return The List of region snapshots
+     */
     public List<RegionSnapshot> getAllRegions(UUID worldUUID){
+
         org.bukkit.World bukkitWorld = Bukkit.getWorld(worldUUID);
+
         if(bukkitWorld == null){
             Blueguard.instance.getLogger().warning("World " + worldUUID.toString() + " not found! Please check your Bluemap config for invalid worlds!");
             return new ArrayList<RegionSnapshot>();
         }
+
         World w = BukkitAdapter.adapt(bukkitWorld);
         RegionContainer regions = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionManager rm = regions.get(w);
+
         return rm.getRegions().values().stream().filter(pr -> {
                 //filter all regions that shall not be rendered
                 StateFlag.State state = pr.getFlag(RENDER_FLAG);
@@ -96,6 +109,7 @@ public class WorldGuardIntegration {
                 }else{
                     colorRGB = BlueGuardConfig.defaultBorderColor();
                 }
+
                 //create and return new RegionSnapshot
                 return new RegionSnapshot(pr.getId(), pr.getFlag(DISPLAY_FLAG), worldUUID, pr.getFlag(HEIGHT_FLAG) != null ? pr.getFlag(HEIGHT_FLAG):BlueGuardConfig.defaultHeight(), points, colorRGBA, colorRGB);
             }).collect(Collectors.toList());
