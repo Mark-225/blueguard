@@ -40,8 +40,6 @@ public class BlueMapIntegration implements BlueMapAPIListener {
     @Override
     public void onDisable(BlueMapAPI blueMapApi) {
         blueMapAPI = null;
-        ShapeMarker sm = null;
-
     }
 
     private void clearMarkers(){
