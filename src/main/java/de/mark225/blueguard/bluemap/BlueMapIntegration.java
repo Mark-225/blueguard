@@ -41,12 +41,14 @@ public class BlueMapIntegration implements BlueMapAPIListener {
     @Override
     public void onDisable(BlueMapAPI blueMapApi) {
         blueMapAPI = null;
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                Blueguard.instance.stopTask();
-            }
-        }.runTask(Blueguard.instance);
+        if(Blueguard.instance.isEnabled()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Blueguard.instance.stopTask();
+                }
+            }.runTask(Blueguard.instance);
+        }
     }
 
     private void clearMarkers(){

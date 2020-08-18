@@ -28,6 +28,11 @@ public class Blueguard extends JavaPlugin {
     }
 
     @Override
+    public void onDisable(){
+        stopTask();
+    }
+
+    @Override
     public void onEnable(){
         instance = this;
         BlueMapAPI.registerListener(bluemap = new BlueMapIntegration());

@@ -1,5 +1,6 @@
 package de.mark225.blueguard.tasks;
 
+import de.mark225.blueguard.BlueGuardConfig;
 import de.mark225.blueguard.Blueguard;
 import de.mark225.blueguard.bluemap.BlueMapIntegration;
 import de.mark225.blueguard.worldguard.RegionSnapshot;
@@ -8,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -51,6 +53,17 @@ public class ResyncTask extends BukkitRunnable {
                     synced.clear();
                     synced.addAll(unchanged);
                     synced.addAll(addedOrChanged);
+
+                    if(BlueGuardConfig.debug()){
+                        String unchangedIds = unchanged.stream().map(RegionSnapshot::getId).collect(Collectors.joining(", "));
+                        String addedOrChangedIds = addedOrChanged.stream().map(RegionSnapshot::getId).collect(Collectors.joining(", "));
+                        String deletedIds = removed.stream().map(RegionSnapshot::getId).collect(Collectors.joining(", "));
+                        Logger log = Blueguard.instance.getLogger();
+
+                        log.info("Unchanged (" + unchanged.size() + "): " + unchangedIds);
+                        log.info("Added/Changed (" + addedOrChanged.size() + "): " + addedOrChangedIds);
+                        log.info("Deleted (" + removed.size() + "): " + deletedIds);
+                    }
 
                     //If any regions were changed or removed, start an async task to edit the markers on Bluemap
                     if(addedOrChanged.size() > 0 || removed.size() > 0){
