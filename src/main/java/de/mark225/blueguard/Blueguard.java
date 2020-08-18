@@ -4,8 +4,10 @@ import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.mark225.blueguard.bluemap.BlueMapIntegration;
 import de.mark225.blueguard.tasks.ResyncTask;
 import de.mark225.blueguard.worldguard.WorldGuardIntegration;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 
@@ -14,6 +16,7 @@ public class Blueguard extends JavaPlugin {
     private BlueMapIntegration bluemap  = null;
     private WorldGuardIntegration worldguard = null;
     private ResyncTask resyncTask = null;
+    private boolean init = false;
 
     private boolean wgInit = false;
 
@@ -29,15 +32,24 @@ public class Blueguard extends JavaPlugin {
         instance = this;
         BlueMapAPI.registerListener(bluemap = new BlueMapIntegration());
         if(wgInit){
-            resyncTask = new ResyncTask();
+            init = true;
         }else{
             getLogger().severe("Worldguard integration couldn't initialise! Blueguard will not work!");
         }
     }
 
+    public void stopTask(){
+        if(resyncTask != null) {
+            Bukkit.getScheduler().cancelTask(resyncTask.getTaskId());
+            resyncTask = null;
+        }
+    }
+
     public void startTask(){
-        if(resyncTask != null)
+        if(resyncTask == null) {
+            resyncTask = new ResyncTask();
             resyncTask.runTaskTimer(this, 0, BlueGuardConfig.syncInterval());
+        }
     }
 
     public BlueMapIntegration getBluemapIntegration(){

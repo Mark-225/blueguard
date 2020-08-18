@@ -9,6 +9,7 @@ import de.bluecolored.bluemap.api.marker.*;
 import de.mark225.blueguard.BlueGuardConfig;
 import de.mark225.blueguard.Blueguard;
 import de.mark225.blueguard.worldguard.RegionSnapshot;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +41,12 @@ public class BlueMapIntegration implements BlueMapAPIListener {
     @Override
     public void onDisable(BlueMapAPI blueMapApi) {
         blueMapAPI = null;
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                Blueguard.instance.stopTask();
+            }
+        }.runTask(Blueguard.instance);
     }
 
     private void clearMarkers(){
