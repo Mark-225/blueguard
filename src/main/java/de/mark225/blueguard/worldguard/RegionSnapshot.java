@@ -6,6 +6,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Class that stores all needed Information about a Worldguard region, so it can be accessed asynchronously
+ */
 public class RegionSnapshot {
     private String id;
     private String name;

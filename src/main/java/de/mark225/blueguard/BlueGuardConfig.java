@@ -54,5 +54,9 @@ public class BlueGuardConfig {
         return config.getInt("update-interval", 200);
     }
 
+    public static boolean debug(){
+        return config.getBoolean("debug", false);
+    }
+
 
 }
