@@ -119,9 +119,9 @@ public class WorldGuardIntegration {
     }
 
     private String parseHtmlDisplay(ProtectedRegion region){
-        String name = region.getId();
-        String owners = region.getOwners().getPlayers().stream().limit(10).collect(Collectors.joining("<br>"));
-        String members = region.getMembers().getPlayers().stream().limit(10).collect(Collectors.joining("<br>"));
+        String name = region.getFlag(DISPLAY_FLAG) != null ? region.getFlag(DISPLAY_FLAG) : region.getId();
+        String owners = region.getOwners().getUniqueIds().stream().limit(10).map(uuid -> Bukkit.getOfflinePlayer(uuid).getName()).collect(Collectors.joining("<br>"));
+        String members = region.getMembers().getUniqueIds().stream().limit(10).map(uuid -> Bukkit.getOfflinePlayer(uuid).getName()).collect(Collectors.joining("<br>"));
         int size3d = 0;
         int size2d = 0;
         if(region instanceof ProtectedCuboidRegion){
