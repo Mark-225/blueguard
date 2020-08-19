@@ -54,6 +54,14 @@ public class BlueGuardConfig {
         return config.getInt("update-interval", 200);
     }
 
+    public static boolean useHtml(){
+        return config.getBoolean("use-html", true);
+    }
+
+    public static String htmlPreset(){
+        return config.getString("html-preset", "${name}");
+    }
+
     public static boolean debug(){
         return config.getBoolean("debug", false);
     }

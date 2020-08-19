@@ -11,16 +11,16 @@ import java.util.UUID;
  */
 public class RegionSnapshot {
     private String id;
-    private String name;
+    private String htmlDisplay;
     private UUID world;
     private int height;
     private List<Vector2d> points;
     private Color color;
     private Color borderColor;
 
-    public RegionSnapshot(String id, String name, UUID world, int height, List<Vector2d> points, Color color, Color borderColor) {
+    public RegionSnapshot(String id, String htmlDisplay, UUID world, int height, List<Vector2d> points, Color color, Color borderColor) {
         this.id = id;
-        this.name = name;
+        this.htmlDisplay = htmlDisplay;
         this.world = world;
         this.height = height;
         this.points = points;
@@ -37,7 +37,7 @@ public class RegionSnapshot {
     }
 
     public String getName() {
-        return name;
+        return htmlDisplay;
     }
 
     public UUID getWorld() {

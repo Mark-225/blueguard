@@ -3,6 +3,7 @@ package de.mark225.blueguard.worldguard;
 import com.flowpowered.math.vector.Vector2d;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.internal.platform.WorldGuardPlatform;
@@ -13,16 +14,18 @@ import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.mark225.blueguard.BlueGuardConfig;
 import de.mark225.blueguard.Blueguard;
+import org.apache.commons.text.StringSubstitutor;
 import org.bukkit.Bukkit;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -111,8 +114,49 @@ public class WorldGuardIntegration {
                 }
 
                 //create and return new RegionSnapshot
-                return new RegionSnapshot(pr.getId(), pr.getFlag(DISPLAY_FLAG), worldUUID, pr.getFlag(HEIGHT_FLAG) != null ? pr.getFlag(HEIGHT_FLAG):BlueGuardConfig.defaultHeight(), points, colorRGBA, colorRGB);
+                return new RegionSnapshot(pr.getId(), BlueGuardConfig.useHtml() ? parseHtmlDisplay(pr) : pr.getFlag(DISPLAY_FLAG), worldUUID, pr.getFlag(HEIGHT_FLAG) != null ? pr.getFlag(HEIGHT_FLAG):BlueGuardConfig.defaultHeight(), points, colorRGBA, colorRGB);
             }).collect(Collectors.toList());
     }
+
+    private String parseHtmlDisplay(ProtectedRegion region){
+        String name = region.getFlag(DISPLAY_FLAG) != null ? region.getFlag(DISPLAY_FLAG) : region.getId();
+        String owners = region.getOwners().getUniqueIds().stream().limit(10).map(uuid -> Bukkit.getOfflinePlayer(uuid).getName()).collect(Collectors.joining("<br>"));
+        String members = region.getMembers().getUniqueIds().stream().limit(10).map(uuid -> Bukkit.getOfflinePlayer(uuid).getName()).collect(Collectors.joining("<br>"));
+        int size3d = 0;
+        int size2d = 0;
+        if(region instanceof ProtectedCuboidRegion){
+            ProtectedCuboidRegion cuboidRegion = (ProtectedCuboidRegion) region;
+            size3d = cuboidRegion.volume();
+            BlockVector3 min = cuboidRegion.getMinimumPoint();
+            BlockVector3 max = cuboidRegion.getMaximumPoint();
+            size2d = (max.getX() - min.getX()) * (max.getZ() - min.getZ());
+        }else if(region instanceof ProtectedPolygonalRegion){
+            ProtectedPolygonalRegion polyRegion = (ProtectedPolygonalRegion) region;
+            size3d = polyRegion.volume();
+            BlockVector3 min = polyRegion.getMinimumPoint();
+            BlockVector3 max = polyRegion.getMaximumPoint();
+            int height = max.getY() - min.getY();
+            size2d = height > 0 ? size3d / height : 0;
+        }
+        HashMap<String, String> values = new HashMap<String, String>();
+        values.put("name", name);
+        values.put("owners", owners);
+        values.put("members", members);
+        values.put("size:2d", ""+ size2d);
+        values.put("size:3d", ""+ size3d);
+        FlagRegistry flagR = WorldGuard.getInstance().getFlagRegistry();
+        List<Flag<?>> flags = flagR.getAll();
+        for(Flag<?> flag : flags){
+            Object obj = region.getFlag(flag);
+            if(obj == null){
+                obj = flag.getDefault();
+            }
+            values.put("flag:" + flag.getName(), obj != null ? obj.toString() : "");
+        }
+        StringSubstitutor sub = new StringSubstitutor(values);
+        return sub.replace(BlueGuardConfig.htmlPreset());
+    }
+
+
 
 }
