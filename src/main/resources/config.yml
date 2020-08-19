@@ -23,6 +23,47 @@ region-color: "960087ff"
 # Default outline color (can be configured per region using "bluemap-color-outline". Use a hexadecimal RGB color code.)
 outline-color: "0060ff"
 
+# Use html preset instead of region id or bluemap-display flag (if defined)
+use-html: true
+
+# Preset of the html formatted text to be displayed when clicking on a region in Bluemap.
+# Html and CSS are supported.
+#
+# IMPORTANT: This Plugin will sanitize the generated html string in the future, but as long as this disclaimer is present,
+# do NOT allow for any user input by people you don't trust or prevent users from using html tags in any other way!
+#
+# Variables:
+# ${name}: The name / Worldguard id of the region
+# ${owners}: a list of all player owner names. Max size of 10.
+# ${members}: a list of all player members. Max size of 10.
+# ${size:2d} / ${size:3d}: the size of the region in square or cubic blocks
+# ${flag:flagname}: the value of the given worldguard flag
+html-preset: |-<p>
+  <span style="color:#${flag:bluemap-color-outline}">
+  ${name}
+  </span>
+  </p>
+  <p>
+  <div style="display:flex">
+  <div style="flex:50%">
+  <span style="text-align:center;font-weight:bold">
+  Owners
+  </span>
+  <span style="text-align=left">
+  ${owners}
+  </span>
+  </div>
+  <div style="flex:50%">
+  <span style="text-align:center;font-weight:bold">
+  Members
+  </span>
+  <span style="text-align=left">
+  ${members}
+  </span>
+  </div>
+  </div>
+  </p>
+
 
 
 
