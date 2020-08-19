@@ -1,9 +1,27 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
+    }
 }
 
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
 group 'de.mark225'
-version '1.0-SNAPSHOT'
+version 'v1.2-alpha'
 
 repositories {
     mavenCentral()
@@ -17,4 +35,20 @@ dependencies {
     compileOnly "org.bukkit:bukkit:1.13-R0.1-SNAPSHOT"
     implementation 'com.github.BlueMap-Minecraft:BlueMapAPI:v1.1.0'
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
 }
+
+configurations {
+    runtime.exclude group: 'com.github.BlueMap-Minecraft'
+}
+
+shadowJar{
+    dependencies {
+        exclude(dependency('com.github.BlueMap-Minecraft:BlueMapAPI:v1.1.0'))
+        exclude(dependency('com.sk89q.worldguard:worldguard-bukkit:7.0.0'))
+        exclude(dependency('org.bukkit:bukkit:1.13-R0.1-SNAPSHOT'))
+    }
+    relocate 'org.apache', 'de.mark225.shadow.org.apache'
+}
+
