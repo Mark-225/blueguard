@@ -30,8 +30,7 @@ use-html: true
 # Html and CSS are supported.
 # Look up YAML multiline string syntax if you want to use a custom preset.
 #
-# IMPORTANT: This Plugin will sanitize the generated html string in the future, but as long as this disclaimer is present,
-# do NOT allow for any user input by people you don't trust or make sure you prevent users from using html tags (e.g. in their region names) in any other way!
+# All variable replacements will be sanitized to prevent xss attacks. You can not insert additional html tags using Worldguard flags.
 #
 # The default setting will:
 # - Display the name of the region in the color of its bluemap-color-outline tag

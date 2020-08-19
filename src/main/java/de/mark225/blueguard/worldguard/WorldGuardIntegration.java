@@ -21,6 +21,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.mark225.blueguard.BlueGuardConfig;
 import de.mark225.blueguard.Blueguard;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.bukkit.Bukkit;
 
@@ -154,8 +155,15 @@ public class WorldGuardIntegration {
             }
             values.put("flag:" + flag.getName(), obj != null ? obj.toString() : "");
         }
+        sanitize(values);
         StringSubstitutor sub = new StringSubstitutor(values);
         return sub.replace(BlueGuardConfig.htmlPreset());
+    }
+
+    private void sanitize(HashMap<String, String> values){
+        for(String key : new ArrayList<String>(values.keySet())){
+            values.put(key, StringEscapeUtils.escapeHtml4(values.get(key)));
+        }
     }
 
     private int polygonArea(List<BlockVector2> coordinates){
