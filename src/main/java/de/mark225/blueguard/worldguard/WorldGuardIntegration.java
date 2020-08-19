@@ -3,6 +3,7 @@ package de.mark225.blueguard.worldguard;
 import com.flowpowered.math.vector.Vector2d;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
@@ -132,11 +133,11 @@ public class WorldGuardIntegration {
             size2d = (max.getX() - min.getX()) * (max.getZ() - min.getZ());
         }else if(region instanceof ProtectedPolygonalRegion){
             ProtectedPolygonalRegion polyRegion = (ProtectedPolygonalRegion) region;
-            size3d = polyRegion.volume();
+            size2d = polygonArea(region.getPoints());
             BlockVector3 min = polyRegion.getMinimumPoint();
             BlockVector3 max = polyRegion.getMaximumPoint();
             int height = max.getY() - min.getY();
-            size2d = height > 0 ? size3d / height : 0;
+            size3d = height * size2d;
         }
         HashMap<String, String> values = new HashMap<String, String>();
         values.put("name", name);
@@ -155,6 +156,15 @@ public class WorldGuardIntegration {
         }
         StringSubstitutor sub = new StringSubstitutor(values);
         return sub.replace(BlueGuardConfig.htmlPreset());
+    }
+
+    private int polygonArea(List<BlockVector2> coordinates){
+        int size = coordinates.size();
+        int sum = 0;
+        for(int i = 0; i < size; i++){
+            sum += (coordinates.get(i).getX() * coordinates.get((i + 1) % size).getZ()) - (coordinates.get(i).getZ() * coordinates.get((i + 1) % size).getX());
+        }
+        return Math.abs((int) ((double) sum / 2d));
     }
 
 
