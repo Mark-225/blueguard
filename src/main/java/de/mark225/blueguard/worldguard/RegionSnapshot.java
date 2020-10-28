@@ -14,15 +14,17 @@ public class RegionSnapshot {
     private String htmlDisplay;
     private UUID world;
     private int height;
+    private boolean depthCheck;
     private List<Vector2d> points;
     private Color color;
     private Color borderColor;
 
-    public RegionSnapshot(String id, String htmlDisplay, UUID world, int height, List<Vector2d> points, Color color, Color borderColor) {
+    public RegionSnapshot(String id, String htmlDisplay, UUID world, int height, boolean depthCheck, List<Vector2d> points, Color color, Color borderColor) {
         this.id = id;
         this.htmlDisplay = htmlDisplay;
         this.world = world;
         this.height = height;
+        this.depthCheck = depthCheck;
         this.points = points;
         this.color = color;
         this.borderColor = borderColor;
@@ -34,6 +36,10 @@ public class RegionSnapshot {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean getDepthCheck() {
+        return depthCheck;
     }
 
     public String getName() {
@@ -62,6 +68,8 @@ public class RegionSnapshot {
             return true;
         if(other == null)
             return false;
+        if(!(other instanceof RegionSnapshot))
+            return false;
         RegionSnapshot snap = (RegionSnapshot) other;
         return snap.getId().equals(this.getId()) &&
                 snap.getBorderColor().equals(this.getBorderColor()) &&
@@ -69,6 +77,7 @@ public class RegionSnapshot {
                 snap.getWorld().equals(this.getWorld()) &&
                 (snap.getName() != null ? snap.getName().equals(this.getName()) : this.getName() == null) &&
                 snap.getHeight() == this.getHeight() &&
+                snap.getDepthCheck() == this.getDepthCheck() &&
                 snap.getPoints().equals(this.getPoints());
     }
 

@@ -66,13 +66,22 @@ public class Blueguard extends JavaPlugin {
     }
 
     private void setupConfig(){
-        File f = new File(this.getDataFolder(), "config.yml");
-        if(!f.exists()){
+        FileConfiguration config = this.getConfig();
+        BlueGuardConfig.setConfig(config);
+        File file = new File(this.getDataFolder() + File.separator + "config.yml");
+        if(!file.exists()){
             this.saveDefaultConfig();
+            getLogger().info("Default config has been saved");
         }
+    }
+
+    public void reload(){
+        this.reloadConfig();
         FileConfiguration config = this.getConfig();
         BlueGuardConfig.setConfig(config);
     }
+
+
 
 
 

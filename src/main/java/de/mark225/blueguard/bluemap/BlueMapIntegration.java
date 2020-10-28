@@ -26,11 +26,13 @@ public class BlueMapIntegration implements BlueMapAPIListener {
 
     @Override
     public void onEnable(BlueMapAPI blueMapApi) {
+        Blueguard.instance.reload();
         this.blueMapAPI = blueMapApi;
         try {
             this.markers = blueMapApi.getMarkerAPI();
             markerSet = markers.createMarkerSet("blueguard-markers");
             markerSet.setLabel(BlueGuardConfig.markerSetName());
+            markerSet.setDefaultHidden(BlueGuardConfig.hideByDefault());
             clearMarkers();
             Blueguard.instance.startTask();
         } catch (IOException e) {
