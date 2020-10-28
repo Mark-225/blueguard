@@ -9,6 +9,10 @@ update-interval: 200
 # Markerset display name in the sidebar of Bluemap's webinterface
 markerset-name: "WorldGuard Regions"
 
+# Determines if region markers are hidden by default (if true, users will have to open the bluemap sidebar and toggle
+# the switch next to the markerset manually to see any markers created by this plugin)
+hide-markerset-default: false
+
 # Region settings
 
 # Render all regions by default (Setting the "render-on-bluemap" flag on individual regions overwrites this setting)
@@ -16,6 +20,12 @@ render-flag-default: true
 
 # Default height to render regions at (if not defined otherwise using the "bluemap-render-height" flag of a region)
 render-height: 64
+
+# Enable depth check by default (can be configured per region using "bluemap-depth-check")
+# If depth check is disabled, your regions fill color will always be visible. If it is enabled, the region can't be seen
+# through blocks in the foreground. Outlines are always visible.
+# If you enable this, make sure your render height is above ground level as underground regions will always only show their outlines.
+depth-check: false
 
 # Default region color (can be configured per region using "bluemap-color". Use a hexadecimal RGBA color code (Format: AARRGGBB).)
 region-color: "960087ff"
@@ -39,8 +49,9 @@ use-html: true
 #
 # Variables:
 # ${name}: The name / Worldguard id of the region
-# ${owners}: a list of all player owner names. Max size of 10.
-# ${members}: a list of all player members. Max size of 10.
+# ${name:true}: The Worldguard id of the region, ignores the "bluemap-display" flag
+# ${owners:[delimiter]:([limit])}: a list of all player owner names, separated by the given delimiter. Max size can be configured (optional, default = 10).
+# ${members:[delimiter]:([limit])}: a list of all player members, separated by the given delimiter. Max size can be configured (optional, default = 10).
 # ${size:2d} / ${size:3d}: the size of the region in square or cubic blocks
 # ${flag:flagname}: the value of the given worldguard flag
 html-preset: |-
@@ -57,7 +68,7 @@ html-preset: |-
   </h3>
   <p>
   <span>
-  ${owners}
+  ${owners:<br>}
   </span>
   </p>
   </div>
@@ -67,7 +78,7 @@ html-preset: |-
   </h3>
   <p>
   <span>
-  ${members}
+  ${members:<br>}
   </span>
   </p>
   </div>

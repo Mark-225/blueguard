@@ -17,8 +17,16 @@ public class BlueGuardConfig {
         return config.getBoolean("render-flag-default", true);
     }
 
+    public static boolean hideByDefault(){
+        return config.getBoolean("hide-markerset-default", false);
+    }
+
     public static int defaultHeight(){
         return config.getInt("render-height", 63);
+    }
+
+    public static boolean depthCheck(){
+        return config.getBoolean("depth-check", false);
     }
 
     private static Pattern rgbpattern = Pattern.compile("[0-9a-f]{8}");
