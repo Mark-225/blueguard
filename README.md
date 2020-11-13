@@ -1,3 +1,7 @@
+# Important
+From here on out, Blueguard will **no longer receive any updates** except for bugfixes. Thus, this plugin will never leave its alpha state.
+The reason for this is that I'm currently working on a more modular approach that will allow multiple different Minecraft region plugins to be displayed on Bluemap using only one core plugin and one or multiple optional addons. Since there will be a module for Worldguard with the exact same features Blueguard provides, this project will soon be obsolete.
+
 # Blueguard
 A Bluemap-Worldguard bridge plugin to display your Worldguard regions on Bluemap
 
