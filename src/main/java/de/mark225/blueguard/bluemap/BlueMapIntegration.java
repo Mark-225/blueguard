@@ -104,7 +104,7 @@ public class BlueMapIntegration implements BlueMapAPIListener {
                     }
                     sm.setLabel(label);
                     sm.setColors(s.getBorderColor(), s.getColor());
-                    sm.setDepthTestEnabled(false);
+                    sm.setDepthTestEnabled(s.getDepthCheck());
                 });
             }
         });
