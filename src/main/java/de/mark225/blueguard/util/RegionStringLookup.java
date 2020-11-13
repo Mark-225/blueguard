@@ -115,7 +115,7 @@ public class RegionStringLookup implements StringLookup {
 
     private String getSize(boolean height){
         BigInteger area2D = new BigInteger("0");
-        BlockVector3 delta = region.getMaximumPoint().subtract(region.getMinimumPoint());
+        BlockVector3 delta = region.getMaximumPoint().add(1,1,1).subtract(region.getMinimumPoint());
         if(region instanceof ProtectedCuboidRegion){
             int dX, dZ;
             dX = delta.getX();

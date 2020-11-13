@@ -3,6 +3,7 @@ package de.mark225.blueguard.worldguard;
 import com.flowpowered.math.vector.Vector2d;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -12,6 +13,7 @@ import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.mark225.blueguard.BlueGuardConfig;
@@ -90,7 +92,7 @@ public class WorldGuardIntegration {
                 return pr.getPoints().size() >= 3 && (((state == null) && BlueGuardConfig.renderDefault()) || (state == StateFlag.State.ALLOW));
             }).map(pr -> {
                 //Convert polygon points to Verctor2d List
-                List<Vector2d> points = pr.getPoints().stream().map(vector -> new Vector2d(vector.getX(), vector.getZ())).collect(Collectors.toList());
+                List<Vector2d> points = getPointsForRegion(pr);
                 //Convert color flags to Color Objects, if applicable
                 String color = pr.getFlag(COLOR_FLAG);
                 Color colorRGBA = null;
@@ -125,6 +127,22 @@ public class WorldGuardIntegration {
     private String parseHtmlDisplay(ProtectedRegion region){
         StringSubstitutor sub = new StringSubstitutor(new RegionStringLookup(region));
         return sub.replace(BlueGuardConfig.htmlPreset());
+    }
+
+    private List<Vector2d> getPointsForRegion(ProtectedRegion region){
+        if(region instanceof ProtectedCuboidRegion){
+            BlockVector3 blockVectorMin = region.getMinimumPoint();
+            BlockVector3 blockVectorMax = region.getMaximumPoint();
+            Vector2d min = new Vector2d(blockVectorMin.getX(), blockVectorMin.getZ());
+            Vector2d max = new Vector2d(blockVectorMax.getX(), blockVectorMax.getZ());
+            List<Vector2d> list = new ArrayList<>();
+            list.add(min);
+            list.add(new Vector2d(max.getX() +1, min.getY()));
+            list.add(new Vector2d(max.getX() + 1, max.getY() + 1));
+            list.add(new Vector2d(min.getX(), max.getY() + 1));
+            return list;
+        }
+        return region.getPoints().stream().map(bv2 -> new Vector2d(bv2.getX() + 0.5, bv2.getZ() + 0.5)).collect(Collectors.toList());
     }
 
     private int polygonArea(List<BlockVector2> coordinates){
