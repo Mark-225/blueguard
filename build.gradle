@@ -21,7 +21,7 @@ java {
 
 
 group 'de.mark225'
-version 'v1.3-alpha'
+version 'v1.3.1-alpha'
 
 repositories {
     mavenCentral()
